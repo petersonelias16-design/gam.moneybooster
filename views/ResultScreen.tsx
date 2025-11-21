@@ -166,6 +166,21 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
           className={`absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-48 blur-[80px] pointer-events-none ${isHighLevel ? 'bg-emerald-500/30' : isMidLevel ? 'bg-amber-500/30' : 'bg-blue-500/30'}`}
         ></motion.div>
 
+        {/* New Introduction Text based on Prompt */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+          className="mb-8 text-slate-200 leading-relaxed"
+        >
+            <p className="font-medium text-lg">
+                🌟 Parabéns! Você completou o Quiz Money Booster. 
+            </p>
+            <p className="text-sm text-slate-400 mt-2">
+                Com base nas suas respostas, você é o tipo de pessoa que está a um passo de mudar completamente sua vida financeira.
+            </p>
+        </motion.div>
+
         {/* Badge Animation */}
         <div className="mb-6 flex justify-center relative z-10">
            {isHighLevel && (
@@ -178,7 +193,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
            <motion.div 
              initial={{ rotate: -180, scale: 0 }}
              animate={{ rotate: 0, scale: 1 }}
-             transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.2 }}
+             transition={{ type: 'spring', stiffness: 200, damping: 15, delay: 0.3 }}
              whileHover={{ scale: 1.1, rotate: 5 }}
              className={`bg-slate-800 p-5 rounded-full ring-4 shadow-[0_0_30px_rgba(0,0,0,0.3)] relative`}
              style={{ 
@@ -192,7 +207,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
                <motion.div 
                  initial={{ scale: 0 }}
                  animate={{ scale: 1 }}
-                 transition={{ delay: 0.5 }}
+                 transition={{ delay: 0.6 }}
                  className="absolute -top-2 -right-2 bg-emerald-500 text-white rounded-full p-1.5 shadow-lg"
                >
                  <Sparkles size={20} fill="currentColor" />
@@ -200,21 +215,12 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
              )}
            </motion.div>
         </div>
-
-        <motion.h2 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-xs font-bold uppercase tracking-[0.2em] text-slate-400 mb-2"
-        >
-          Seu Nível de Potencial Financeiro
-        </motion.h2>
         
         <motion.h1 
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.5, type: "spring" }}
-          className={`text-3xl md:text-4xl font-extrabold mb-6 ${currentLevel.color} drop-shadow-sm`}
+          className={`text-2xl md:text-3xl font-extrabold mb-2 ${currentLevel.color} drop-shadow-sm`}
         >
           {currentLevel.title}
         </motion.h1>
@@ -223,10 +229,10 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
-          className="bg-slate-800/60 rounded-xl p-5 mb-8 text-left border border-slate-700 relative overflow-hidden group hover:border-slate-600 transition-colors z-10"
+          className="bg-slate-800/60 rounded-xl p-4 mb-6 text-left border border-slate-700 relative overflow-hidden group hover:border-slate-600 transition-colors z-10"
         >
             {/* Subtle progress bar behind representing score */}
-            <div className="absolute bottom-0 left-0 h-1.5 bg-slate-700/50 w-full">
+            <div className="absolute bottom-0 left-0 h-1 bg-slate-700/50 w-full">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${(score / 40) * 100}%` }}
@@ -235,18 +241,18 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
                 ></motion.div>
             </div>
             
-            <p className="text-slate-200 mb-4 leading-relaxed font-medium text-sm md:text-base">
+            <p className="text-slate-300 mb-2 leading-relaxed font-medium text-sm text-center">
                 {currentLevel.description}
             </p>
             
-            <div className="flex items-center justify-between text-xs text-slate-400 font-mono border-t border-slate-700/50 pt-3 mt-2">
+            <div className="flex items-center justify-between text-xs text-slate-400 font-mono border-t border-slate-700/50 pt-2 mt-2">
                <div className="flex items-center gap-2">
-                   <Trophy className={`w-4 h-4 ${score > 30 ? 'text-yellow-400' : 'text-slate-400'}`} />
-                   <span>Score: <span className="text-white font-bold text-lg align-middle">{displayScore}</span>/40</span>
+                   <Trophy className={`w-3 h-3 ${score > 30 ? 'text-yellow-400' : 'text-slate-400'}`} />
+                   <span>Score: <span className="text-white font-bold">{displayScore}</span>/40</span>
                </div>
                <div className="flex items-center gap-1">
                    <Target className="w-3 h-3 text-brand-accent" />
-                   <span>Perfil Mapeado</span>
+                   <span>Perfil Analisado</span>
                </div>
             </div>
         </motion.div>
@@ -255,11 +261,11 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.5 }}
-          className="mb-5 relative"
+          className="mb-4 relative"
         >
             <div className="absolute -inset-2 bg-brand-gold/10 blur-lg rounded-full"></div>
             <p className="text-sm text-brand-gold font-bold uppercase tracking-widest animate-pulse relative z-10">
-                Oportunidade Única Liberada
+                Temos uma oportunidade única para você
             </p>
         </motion.div>
 
@@ -273,10 +279,11 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
           className="block w-full group relative z-20"
         >
             <div className="absolute -inset-1 bg-gradient-to-r from-brand-gold to-orange-500 rounded-xl blur opacity-40 group-hover:opacity-75 transition duration-300 animate-pulse-slow"></div>
-            <Button variant="secondary" fullWidth className="text-xl py-6 relative shadow-xl border-none">
-                <div className="flex flex-col items-center leading-tight gap-1 w-full">
-                    <span className="drop-shadow-sm font-black uppercase tracking-wide">Destravar Agora! 🚀</span>
-                    <span className="text-xs font-semibold opacity-90 text-brand-dark/80">Oferta Especial: Apenas R$16,99</span>
+            <Button variant="secondary" fullWidth className="text-lg py-5 md:py-6 relative shadow-xl border-none">
+                <div className="flex flex-col items-center leading-tight gap-1 w-full px-2">
+                    <span className="drop-shadow-sm font-black uppercase tracking-wide text-center leading-tight">
+                        Quero destravar minha liberdade financeira por R$16,99 AGORA! 🚀
+                    </span>
                 </div>
             </Button>
         </motion.a>
