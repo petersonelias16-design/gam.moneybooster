@@ -82,6 +82,45 @@ export const playSuccessSound = () => {
   }
 };
 
+export const playStartSound = () => {
+  try {
+    const ctx = initAudio();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    
+    // "Power Up" / "Boost" Sound
+    // Rapid rising pitch with harmonics
+    
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    
+    osc.type = 'sawtooth'; // More energetic waveform
+    osc.frequency.setValueAtTime(200, t);
+    osc.frequency.exponentialRampToValueAtTime(880, t + 0.4); // Rise to A5
+    
+    // Lowpass filter to smooth out the sawtooth harshness
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(500, t);
+    filter.frequency.linearRampToValueAtTime(2000, t + 0.3);
+
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.15, t + 0.1);
+    gain.gain.exponentialRampToValueAtTime(0.01, t + 0.5);
+
+    osc.connect(filter);
+    filter.connect(gain);
+    gain.connect(ctx.destination);
+    
+    osc.start(t);
+    osc.stop(t + 0.5);
+
+  } catch (e) {
+    console.error("Audio error", e);
+  }
+};
+
 export const playCelebrationSound = () => {
   try {
     const ctx = initAudio();

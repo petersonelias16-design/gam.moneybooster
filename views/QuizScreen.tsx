@@ -7,6 +7,7 @@ import { Option } from '../types';
 import Button from '../components/Button';
 import ProgressBar from '../components/ProgressBar';
 import SocialProofBubble from '../components/SocialProofBubble';
+import HeaderLogo from '../components/HeaderLogo';
 import { CheckCircle2 } from 'lucide-react';
 import { playSuccessSound } from '../utils/audio';
 
@@ -100,7 +101,7 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ onComplete }) => {
     : null;
 
   return (
-    <div className="flex flex-col items-center max-w-xl mx-auto w-full min-h-screen p-4 pt-10 relative z-10">
+    <div className="flex flex-col items-center max-w-xl mx-auto w-full min-h-screen p-4 pt-6 relative z-10">
       
       {/* Social Proof Overlay */}
       <AnimatePresence>
@@ -109,8 +110,11 @@ const QuizScreen: React.FC<QuizScreenProps> = ({ onComplete }) => {
         )}
       </AnimatePresence>
 
+      {/* Logo Above Progress Bar */}
+      <HeaderLogo />
+
       {/* Progress Header */}
-      <div className="w-full mb-8 space-y-1 mt-4">
+      <div className="w-full mb-8 space-y-1 mt-2">
         <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-slate-400 px-1">
             <span>Evolução</span>
             <span>{Math.round(progress)}%</span>

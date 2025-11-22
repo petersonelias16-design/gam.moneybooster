@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
@@ -39,27 +38,54 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
     window.scrollTo(0, 0);
 
     // Play Success Fanfare
-    setTimeout(() => {
+    const soundTimer = setTimeout(() => {
         playCelebrationSound();
     }, 300);
 
-    // Animate Score Counting
-    let startTimestamp: number;
-    const duration = 2000;
-    
-    const step = (timestamp: number) => {
-      if (!startTimestamp) startTimestamp = timestamp;
-      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-      const easeProgress = 1 - Math.pow(1 - progress, 3); // cubic ease out
-      
-      setDisplayScore(Math.floor(easeProgress * score));
-      
-      if (progress < 1) {
-        window.requestAnimationFrame(step);
-      }
+    // Suspenseful Score Counting Animation
+    let currentVal = 0;
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const tick = () => {
+        const remaining = score - currentVal;
+        
+        if (remaining <= 0) {
+            setDisplayScore(score);
+            return;
+        }
+
+        // Dynamic speed calculation to create suspense
+        let step = 1;
+        let delay = 30; // Base speed (fast)
+
+        if (remaining > 15) {
+            step = Math.ceil(remaining / 5); // Jump faster early on
+            delay = 40;
+        } else if (remaining > 8) {
+            step = 1;
+            delay = 60;
+        } else if (remaining > 4) {
+            step = 1;
+            delay = 150; // Slowing down significantly
+        } else if (remaining > 1) {
+            step = 1;
+            delay = 400; // Suspense...
+        } else {
+            // Last point: Dramatic pause
+            step = 1;
+            delay = 800; 
+        }
+
+        currentVal += step;
+        // Clamp to ensure we don't overshoot
+        if (currentVal > score) currentVal = score;
+
+        setDisplayScore(currentVal);
+        timeoutId = setTimeout(tick, delay);
     };
-    
-    window.requestAnimationFrame(step);
+
+    // Start counting after a small delay
+    timeoutId = setTimeout(tick, 500);
 
     // Confetti Logic based on score
     const fireConfetti = () => {
@@ -87,9 +113,14 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
       }
     };
 
-    // Slight delay for visual impact
-    const timer = setTimeout(fireConfetti, 600);
-    return () => clearTimeout(timer);
+    // Fire confetti slightly after score starts counting
+    const confettiTimer = setTimeout(fireConfetti, 1000);
+
+    return () => {
+        clearTimeout(soundTimer);
+        clearTimeout(timeoutId);
+        clearTimeout(confettiTimer);
+    };
 
   }, [score, isHighLevel, isMidLevel]);
 
@@ -235,8 +266,8 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
             <div className="absolute bottom-0 left-0 h-1 bg-slate-700/50 w-full">
                 <motion.div 
                   initial={{ width: 0 }}
-                  animate={{ width: `${(score / 40) * 100}%` }}
-                  transition={{ delay: 1, duration: 1.5, ease: "circOut" }}
+                  animate={{ width: `${(displayScore / 40) * 100}%` }}
+                  transition={{ duration: 0.2 }} // Fast update to match counter
                   className={`h-full ${score > 30 ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.7)]' : score > 20 ? 'bg-yellow-500' : 'bg-blue-500'}`} 
                 ></motion.div>
             </div>
@@ -248,7 +279,7 @@ const ResultScreen: React.FC<ResultScreenProps> = ({ score }) => {
             <div className="flex items-center justify-between text-xs text-slate-400 font-mono border-t border-slate-700/50 pt-2 mt-2">
                <div className="flex items-center gap-2">
                    <Trophy className={`w-3 h-3 ${score > 30 ? 'text-yellow-400' : 'text-slate-400'}`} />
-                   <span>Score: <span className="text-white font-bold">{displayScore}</span>/40</span>
+                   <span>Score: <span className={`font-bold text-lg ${displayScore === score ? 'text-brand-green animate-pulse' : 'text-white'}`}>{displayScore}</span>/40</span>
                </div>
                <div className="flex items-center gap-1">
                    <Target className="w-3 h-3 text-brand-accent" />

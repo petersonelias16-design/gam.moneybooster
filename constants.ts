@@ -130,7 +130,7 @@ export const RESULT_LEVELS: ResultLevel[] = [
   }
 ];
 
-export const CHECKOUT_URL = "https://pay.kiwify.com.br/LMzJmZu";
+export const CHECKOUT_URL = "https://pay.kiwify.com.br/9yEGPMN";
 
 export interface SocialProof {
     triggerAfterQuestionIndex: number; // 0-based index (e.g., 1 means after question 2)
